@@ -14,7 +14,9 @@ var channel = connection.CreateModel();
 channel.BasicQos(0, 1, false);
 var consumer = new EventingBasicConsumer(channel);
 
-var queueName = "direct-queue-Critical";
+var queueName = channel.QueueDeclare().QueueName;
+var routekey = "Info.#";
+channel.QueueBind(queueName, "logs-topic", routekey);
 
 channel.BasicConsume(queueName, false, consumer);
 
