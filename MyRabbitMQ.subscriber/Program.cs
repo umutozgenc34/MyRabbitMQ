@@ -4,7 +4,7 @@ using System.Text;
 
 
 var factory = new ConnectionFactory();
-factory.Uri = new Uri("amqps://lifgdraw:v8CrUeSM4NT8z2eQlXEuhcdPdARo2EXh@chimpanzee.rmq.cloudamqp.com/lifgdraw");
+factory.Uri = new Uri("amqps://********************@chimpanzee.rmq.cloudamqp.com/lifgdraw");
 
 using var connection = factory.CreateConnection();
 
