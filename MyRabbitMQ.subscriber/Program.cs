@@ -3,25 +3,20 @@ using RabbitMQ.Client.Events;
 using System.Text;
 
 
-//fanout exchange kendisine bağlı olan tüm kuyruklara publisher(producer)dan aldığı mesajı filtreleme yapmaksızın iletir.
-//consumerlar genellikle* kendi kuyruklarını kendi oluşturur.
-
-
 var factory = new ConnectionFactory();
-factory.Uri = new Uri("amqps:*******************************@chimpanzee.rmq.cloudamqp.com/lifgdraw");
+factory.Uri = new Uri("amqps://lifgdraw:v8CrUeSM4NT8z2eQlXEuhcdPdARo2EXh@chimpanzee.rmq.cloudamqp.com/lifgdraw");
 
 using var connection = factory.CreateConnection();
 
 var channel = connection.CreateModel();
-//channel.QueueDeclare("first-queue", true, false, false);
 
-var randomQueueName = channel.QueueDeclare().QueueName;
-channel.QueueBind(randomQueueName, "logs-fanout", "", null);
 
 channel.BasicQos(0, 1, false);
-
 var consumer = new EventingBasicConsumer(channel);
-channel.BasicConsume(randomQueueName, false, consumer);
+
+var queueName = "direct-queue-Critical";
+
+channel.BasicConsume(queueName, false, consumer);
 
 Console.WriteLine("Loglar dinleniyor.");
 
@@ -32,6 +27,7 @@ consumer.Received += (object sender, BasicDeliverEventArgs e) =>
     Thread.Sleep(1000);
 
     Console.WriteLine($"Gelen mesaj : {message} ");
+
     channel.BasicAck(e.DeliveryTag, false);
 };
 
